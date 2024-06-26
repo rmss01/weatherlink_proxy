@@ -106,16 +106,17 @@ async function makeHistoricJSON() {
       "X-api-secret": api_secret,
     }
   });
-  const stationsList = stations.json;
+  const stationsList = await stations.json();
   // Para cada estacion:
-  stationsList.array.forEach(station => {
+  stationsList.forEach(async station => {
     const archivo = "https://api.weatherlink.com/v2/current/" + station.station_id + "?api-key=" + api_key; // Ruta con ID de la estación para obtener los datos metereológicos
-    let data = fetch(archivo, {
+    let response = await fetch(archivo, {
       headers: {
         "X-api-secret": api_secret,
       }
     });
-
+    
+    let data = await response.json();
     // Recuperar los datos metereológicos en un nuevo json
     let sensorData = data['sensors'][0]['data'][0]; // Extraer los datos de data['sensors'][0]['data'][0]
     let newJson = {}
